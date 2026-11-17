@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="obsidian">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <meta content="#0f172a" name="theme-color" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>ApexCalc Pro — Universal High-Precision Calculator</title>
+
+    <!-- Dynamic SVG Favicon -->
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='25' fill='%23f59e0b'/><text x='50%' y='68%' font-size='60' font-family='sans-serif' font-weight='900' fill='white' text-anchor='middle'>%2B</text></svg>"
+    />
+
+    <!-- Google Fonts & Tailwind Play CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: ["class", '[data-theme="obsidian"]'],
+        theme: {
+          extend: {
+            colors: {
+              accent: "#f59e0b",
+            },
+          },
+        },
+      };
+    </script>
+
+    <!-- FontAwesome 6 -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      crossorigin="anonymous"
+    />
+
+    <!-- Custom Stylesheet -->
+    <link rel="stylesheet" href="styles/style.css" />
+  </head>
+
+  <body class="relative flex flex-col justify-between min-h-screen">
+    <!-- Ambient Glowing Orbs Background -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none -z-10">
+      <div
+        class="ambient-orb-1 absolute -top-40 -left-40 w-[600px] h-[600px] rounded-full blur-[100px] opacity-40 animate-pulse"
+      ></div>
+      <div
+        class="ambient-orb-2 absolute -bottom-40 -right-40 w-[600px] h-[600px] rounded-full blur-[120px] opacity-35"
+      ></div>
+    </div>
+
+    <!-- Main Container -->
+    <main
+      class="flex flex-col items-center justify-center flex-grow p-3 sm:p-6 lg:p-8"
+      role="application"
+      aria-label="ApexCalc Pro Application"
+    >
+      <!-- Top Navigation & Controls Bar -->
+      <header
+        class="flex flex-wrap items-center justify-between w-full max-w-2xl mb-4 gap-3 z-10"
+      >
+        <!-- App Branding -->
+        <div class="flex items-center gap-3">
+          <div
+            class="flex items-center justify-center w-11 h-11 rounded-2xl bg-gradient-to-tr from-amber-500 to-yellow-400 text-white font-black text-xl shadow-lg shadow-amber-500/30"
+          >
+            <i class="fa-solid fa-calculator"></i>
+          </div>
+          <div>
+            <h1
+              class="text-xl sm:text-2xl font-extrabold tracking-tight bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 bg-clip-text text-transparent"
+            >
+              ApexCalc <span class="text-xs uppercase font-bold px-1.5 py-0.5 rounded-md bg-amber-500/20 text-amber-400 border border-amber-500/30 ml-1">Pro</span>
+            </h1>
+            <p class="text-xs text-gray-400 font-medium">Universal Computing Suite</p>
+          </div>
+        </div>
+
+        <!-- Quick Action Buttons -->
+        <div class="flex items-center gap-2">
+          <!-- Theme Switcher -->
+          <div class="relative">
+            <select
+              id="theme-select"
+              aria-label="Select theme"
+              class="appearance-none bg-white/10 hover:bg-white/15 text-xs font-semibold px-3 py-2 pr-7 rounded-xl border border-white/10 cursor-pointer text-inherit backdrop-blur-md focus:outline-none transition-all"
+            >
+              <option value="obsidian" class="bg-gray-900 text-white">🌌 Obsidian</option>
+              <option value="aurora" class="bg-white text-gray-900">☀️ Aurora</option>
+              <option value="cyberpunk" class="bg-purple-950 text-pink-300">💜 Cyberpunk</option>
+              <option value="emerald" class="bg-emerald-950 text-emerald-300">🌿 Emerald</option>
+              <option value="oceanic" class="bg-sky-950 text-sky-300">🌊 Oceanic</option>
+            </select>
+            <i
+              class="fa-solid fa-chevron-down absolute right-2.5 top-1/2 -translate-y-1/2 text-[10px] pointer-events-none opacity-60"
+            ></i>
+          </div>
+
+          <!-- Sound Feedback Toggle -->
+          <button
+            id="sound-toggle"
+            aria-label="Toggle sound feedback"
+            title="Audio Clicks (M)"
+            class="flex items-center justify-center w-9 h-9 rounded-xl bg-white/10 hover:bg-white/15 border border-white/10 text-sm transition-all"
+          >
+            <i id="sound-icon" class="fa-solid fa-volume-high text-amber-400"></i>
+          </button>
+
+          <!-- Keyboard Shortcuts Guide Trigger -->
+          <button
+            id="shortcuts-btn"
+            aria-label="View keyboard shortcuts"
+            title="Shortcuts (?)"
+            class="flex items-center justify-center w-9 h-9 rounded-xl bg-white/10 hover:bg-white/15 border border-white/10 text-sm transition-all"
+          >
+            <i class="fa-solid fa-keyboard text-gray-300"></i>
+          </button>
+
+          <!-- History Drawer Trigger -->
+          <button
+            id="history-btn"
+            aria-label="Open calculation history"
+            title="History (H)"
+            class="relative flex items-center justify-center w-9 h-9 rounded-xl bg-white/10 hover:bg-white/15 border border-white/10 text-sm transition-all"
+          >
+            <i class="fa-solid fa-clock-rotate-left text-amber-400"></i>
+            <span
+              id="history-badge"
+              class="hidden absolute -top-1.5 -right-1.5 bg-amber-500 text-black text-[10px] font-black w-4 h-4 rounded-full flex items-center justify-center shadow"
+              >0</span
+            >
+          </button>
+        </div>
+      </header>
+
+      <!-- Calculator Card -->
+      <section
+        class="calculator-card relative w-full max-w-2xl rounded-3xl p-4 sm:p-7 backdrop-blur-2xl transition-all duration-300"
+      >
+        <!-- Mode Switcher Tabs -->
+        <nav
+          class="flex items-center justify-between p-1 mb-5 rounded-2xl bg-black/20 border border-white/5 overflow-x-auto"
+          aria-label="Calculator Modes"
+        >
+          <button class="mode-tab active" data-mode="standard">
+            <i class="fa-solid fa-calculator mr-1.5 text-xs"></i>Standard
+          </button>
+          <button class="mode-tab" data-mode="scientific">
+            <i class="fa-solid fa-flask mr-1.5 text-xs"></i>Scientific
+          </button>
+          <button class="mode-tab" data-mode="converter">
+            <i class="fa-solid fa-arrow-right-arrow-left mr-1.5 text-xs"></i>Converter
+          </button>
+          <button class="mode-tab" data-mode="programmer">
+            <i class="fa-solid fa-code mr-1.5 text-xs"></i>Programmer
+          </button>
+        </nav>
+
+        <!-- Display Screen -->
+        <div class="display-screen rounded-2xl p-4 sm:p-6 mb-4 relative shadow-inner overflow-hidden">
+          <!-- Top Info Badges Row -->
+          <div class="flex items-center justify-between min-h-[24px] mb-2 text-xs">
+            <div class="flex items-center gap-2">
+              <button
+                id="angle-badge"
+                title="Toggle DEG / RAD"
+                class="hidden px-2 py-0.5 rounded-md font-mono font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30 hover:bg-amber-500/30 transition-all cursor-pointer"
+              >
+                DEG
+              </button>
+              <span
+                id="memory-badge"
+                class="hidden px-2 py-0.5 rounded-md font-mono font-bold bg-blue-500/20 text-blue-400 border border-blue-500/30"
+              >
+                M
+              </span>
+            </div>
+
+            <!-- Copy Button -->
+            <button
+              id="copy-btn"
+              title="Copy result (Ctrl+C)"
+              class="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition-all text-xs"
+            >
+              <i class="fa-regular fa-copy"></i>
+              <span>Copy</span>
+            </button>
+          </div>
+
+          <!-- Formula / Expression Preview Line -->
+          <div
+            id="expression-display"
+            class="font-mono-math text-right text-sm sm:text-base text-gray-400 min-h-[22px] tracking-wide overflow-x-auto whitespace-nowrap select-text"
+          ></div>
+
+          <!-- Main Input & Dynamic Number Display -->
+          <div class="relative w-full">
+            <input
+              id="main-display"
+              type="text"
+              readonly
+              aria-live="polite"
+              class="w-full text-right text-4xl sm:text-5xl lg:text-6xl font-bold font-mono-math bg-transparent border-0 focus:outline-none tracking-tight select-text text-inherit"
+              placeholder="0"
+              value="0"
+            />
+          </div>
+
+          <!-- Live Evaluation Ghost Line -->
+          <div
+            id="preview-display"
+            class="font-mono-math text-right text-sm sm:text-base text-amber-400/80 min-h-[20px] font-medium"
+          ></div>
+        </div>
+
+        <!-- Memory Action Bar (MC, MR, M+, M-, MS) -->
+        <div id="memory-bar" class="grid grid-cols-5 gap-2 mb-4">
+          <button class="calc-btn calc-btn-mem" data-mem="MC">MC</button>
+          <button class="calc-btn calc-btn-mem" data-mem="MR">MR</button>
+          <button class="calc-btn calc-btn-mem" data-mem="M+">M+</button>
+          <button class="calc-btn calc-btn-mem" data-mem="M-">M−</button>
+          <button class="calc-btn calc-btn-mem" data-mem="MS">MS</button>
+        </div>
+
+        <!-- 1. STANDARD KEYPAD -->
+        <div id="standard-keypad" class="grid grid-cols-4 gap-2.5 sm:gap-3 text-lg">
+          <button value="(" class="calc-btn calc-btn-fn min-h-[3.8rem] sm:min-h-[4.4rem]">(</button>
+          <button value=")" class="calc-btn calc-btn-fn min-h-[3.8rem] sm:min-h-[4.4rem]">)</button>
+          <button value="C" aria-label="Clear all" class="calc-btn calc-btn-clear min-h-[3.8rem] sm:min-h-[4.4rem]">C</button>
+          <button value="%" class="calc-btn calc-btn-fn min-h-[3.8rem] sm:min-h-[4.4rem]">%</button>
+
+          <button value="7" class="calc-btn calc-btn-num min-h-[3.8rem] sm:min-h-[4.4rem]">7</button>
+          <button value="8" class="calc-btn calc-btn-num min-h-[3.8rem] sm:min-h-[4.4rem]">8</button>
+          <button value="9" class="calc-btn calc-btn-num min-h-[3.8rem] sm:min-h-[4.4rem]">9</button>
+          <button value="/" aria-label="Divide" class="calc-btn calc-btn-op min-h-[3.8rem] sm:min-h-[4.4rem]">÷</button>
+
+          <button value="4" class="calc-btn calc-btn-num min-h-[3.8rem] sm:min-h-[4.4rem]">4</button>
+          <button value="5" class="calc-btn calc-btn-num min-h-[3.8rem] sm:min-h-[4.4rem]">5</button>
+          <button value="6" class="calc-btn calc-btn-num min-h-[3.8rem] sm:min-h-[4.4rem]">6</button>
+          <button value="*" aria-label="Multiply" class="calc-btn calc-btn-op min-h-[3.8rem] sm:min-h-[4.4rem]">×</button>
+
+          <button value="1" class="calc-btn calc-btn-num min-h-[3.8rem] sm:min-h-[4.4rem]">1</button>
+          <button value="2" class="calc-btn calc-btn-num min-h-[3.8rem] sm:min-h-[4.4rem]">2</button>
+          <button value="3" class="calc-btn calc-btn-num min-h-[3.8rem] sm:min-h-[4.4rem]">3</button>
+          <button value="-" aria-label="Subtract" class="calc-btn calc-btn-op min-h-[3.8rem] sm:min-h-[4.4rem]">−</button>
+
+          <button value="0" class="calc-btn calc-btn-num min-h-[3.8rem] sm:min-h-[4.4rem]">0</button>
+          <button value="." class="calc-btn calc-btn-num min-h-[3.8rem] sm:min-h-[4.4rem]">.</button>
+          <button value="⌫" aria-label="Backspace" class="calc-btn calc-btn-fn min-h-[3.8rem] sm:min-h-[4.4rem]">
+            <i class="fa-solid fa-delete-left"></i>
+          </button>
+          <button value="+" aria-label="Add" class="calc-btn calc-btn-op min-h-[3.8rem] sm:min-h-[4.4rem]">+</button>
+
+          <button value="sqrt(" aria-label="Square root" class="calc-btn calc-btn-fn min-h-[3.8rem] sm:min-h-[4.4rem]">√</button>
+          <button value="^" aria-label="Power" class="calc-btn calc-btn-fn min-h-[3.8rem] sm:min-h-[4.4rem]">xʸ</button>
+          <button value="=" aria-label="Equals" class="calc-btn calc-btn-eq col-span-2 min-h-[3.8rem] sm:min-h-[4.4rem]">=</button>
+        </div>
+
+        <!-- 2. SCIENTIFIC KEYPAD -->
+        <div id="scientific-keypad" class="hidden grid grid-cols-5 gap-2 text-base">
+          <!-- Row 1 -->
+          <button value="2nd" id="btn-2nd" class="calc-btn calc-btn-fn min-h-[3.2rem]">2nd</button>
+          <button value="sin(" id="btn-sin" class="calc-btn calc-btn-fn min-h-[3.2rem]">sin</button>
+          <button value="cos(" id="btn-cos" class="calc-btn calc-btn-fn min-h-[3.2rem]">cos</button>
+          <button value="tan(" id="btn-tan" class="calc-btn calc-btn-fn min-h-[3.2rem]">tan</button>
+          <button value="C" class="calc-btn calc-btn-clear min-h-[3.2rem]">C</button>
+
+          <!-- Row 2 -->
+          <button value="pi" class="calc-btn calc-btn-fn min-h-[3.2rem]">π</button>
+          <button value="e" class="calc-btn calc-btn-fn min-h-[3.2rem]">e</button>
+          <button value="ln(" id="btn-ln" class="calc-btn calc-btn-fn min-h-[3.2rem]">ln</button>
+          <button value="log(" id="btn-log" class="calc-btn calc-btn-fn min-h-[3.2rem]">log</button>
+          <button value="⌫" class="calc-btn calc-btn-fn min-h-[3.2rem]"><i class="fa-solid fa-delete-left"></i></button>
+
+          <!-- Row 3 -->
+          <button value="sqrt(" id="btn-sqrt" class="calc-btn calc-btn-fn min-h-[3.2rem]">√</button>
+          <button value="^" class="calc-btn calc-btn-fn min-h-[3.2rem]">xʸ</button>
+          <button value="!" class="calc-btn calc-btn-fn min-h-[3.2rem]">x!</button>
+          <button value="(" class="calc-btn calc-btn-fn min-h-[3.2rem]">(</button>
+          <button value=")" class="calc-btn calc-btn-fn min-h-[3.2rem]">)</button>
+
+          <!-- Row 4 -->
+          <button value="abs(" class="calc-btn calc-btn-fn min-h-[3.2rem]">|x|</button>
+          <button value="7" class="calc-btn calc-btn-num min-h-[3.2rem]">7</button>
+          <button value="8" class="calc-btn calc-btn-num min-h-[3.2rem]">8</button>
+          <button value="9" class="calc-btn calc-btn-num min-h-[3.2rem]">9</button>
+          <button value="/" class="calc-btn calc-btn-op min-h-[3.2rem]">÷</button>
+
+          <!-- Row 5 -->
+          <button value="1/(" class="calc-btn calc-btn-fn min-h-[3.2rem]">1/x</button>
+          <button value="4" class="calc-btn calc-btn-num min-h-[3.2rem]">4</button>
+          <button value="5" class="calc-btn calc-btn-num min-h-[3.2rem]">5</button>
+          <button value="6" class="calc-btn calc-btn-num min-h-[3.2rem]">6</button>
+          <button value="*" class="calc-btn calc-btn-op min-h-[3.2rem]">×</button>
+
+          <!-- Row 6 -->
+          <button value="%" class="calc-btn calc-btn-fn min-h-[3.2rem]">%</button>
+          <button value="1" class="calc-btn calc-btn-num min-h-[3.2rem]">1</button>
+          <button value="2" class="calc-btn calc-btn-num min-h-[3.2rem]">2</button>
+          <button value="3" class="calc-btn calc-btn-num min-h-[3.2rem]">3</button>
+          <button value="-" class="calc-btn calc-btn-op min-h-[3.2rem]">−</button>
+
+          <!-- Row 7 -->
+          <button value="rand" class="calc-btn calc-btn-fn text-xs min-h-[3.2rem]">RAND</button>
+          <button value="0" class="calc-btn calc-btn-num min-h-[3.2rem]">0</button>
+          <button value="." class="calc-btn calc-btn-num min-h-[3.2rem]">.</button>
+          <button value="=" class="calc-btn calc-btn-eq min-h-[3.2rem]">=</button>
+          <button value="+" class="calc-btn calc-btn-op min-h-[3.2rem]">+</button>
+        </div>
+
+        <!-- 3. UNIT CONVERTER PANEL -->
+        <div id="converter-panel" class="hidden space-y-4">
+          <!-- Category Selector -->
+          <div>
+            <label class="block text-xs font-semibold text-gray-400 mb-1">CONVERSION TYPE</label>
+            <select
+              id="conv-category"
+              class="w-full bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl p-3 text-sm font-semibold text-inherit focus:outline-none"
+            >
+              <option value="length" class="bg-gray-900 text-white">📏 Length</option>
+              <option value="mass" class="bg-gray-900 text-white">⚖️ Mass & Weight</option>
+              <option value="temperature" class="bg-gray-900 text-white">🌡️ Temperature</option>
+              <option value="data" class="bg-gray-900 text-white">💾 Digital Storage</option>
+              <option value="speed" class="bg-gray-900 text-white">🚀 Speed</option>
+              <option value="time" class="bg-gray-900 text-white">⏱️ Time</option>
+            </select>
+          </div>
+
+          <!-- Two-way interactive cards -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 items-center relative">
+            <!-- From Card -->
+            <div class="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-2">
+              <span class="text-xs font-semibold text-gray-400">FROM</span>
+              <input
+                id="conv-from-input"
+                type="number"
+                value="1"
+                class="w-full bg-black/20 rounded-xl p-3 text-2xl font-bold font-mono-math text-inherit border border-white/5 focus:outline-none"
+              />
+              <select
+                id="conv-from-unit"
+                class="w-full bg-transparent text-sm font-medium border-0 focus:outline-none text-inherit cursor-pointer"
+              ></select>
+            </div>
+
+            <!-- Swap button in middle -->
+            <div class="flex justify-center -my-2 sm:my-0 sm:absolute sm:left-1/2 sm:-translate-x-1/2 z-10">
+              <button
+                id="conv-swap-btn"
+                title="Swap Units"
+                class="w-10 h-10 rounded-full bg-amber-500 text-black font-bold flex items-center justify-center shadow-lg hover:scale-110 active:scale-95 transition-all"
+              >
+                <i class="fa-solid fa-repeat"></i>
+              </button>
+            </div>
+
+            <!-- To Card -->
+            <div class="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-2">
+              <span class="text-xs font-semibold text-gray-400">TO (RESULT)</span>
+              <input
+                id="conv-to-result"
+                type="text"
+                readonly
+                class="w-full bg-black/20 rounded-xl p-3 text-2xl font-bold font-mono-math text-amber-400 border border-white/5 focus:outline-none"
+                placeholder="0"
+              />
+              <select
+                id="conv-to-unit"
+                class="w-full bg-transparent text-sm font-medium border-0 focus:outline-none text-inherit cursor-pointer"
+              ></select>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. PROGRAMMER PANEL -->
+        <div id="programmer-panel" class="hidden space-y-4">
+          <!-- Live Base Values Grid -->
+          <div class="space-y-2 text-xs font-mono-math">
+            <button
+              class="prog-base-btn w-full p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 flex justify-between items-center ring-2 ring-amber-400 transition-all text-left"
+              data-base="HEX"
+            >
+              <span class="text-gray-400 font-bold">HEX</span>
+              <span id="prog-hex" class="text-amber-400 font-bold text-sm">0</span>
+            </button>
+            <button
+              class="prog-base-btn w-full p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 flex justify-between items-center transition-all text-left"
+              data-base="DEC"
+            >
+              <span class="text-gray-400 font-bold">DEC</span>
+              <span id="prog-dec" class="font-bold text-sm">0</span>
+            </button>
+            <button
+              class="prog-base-btn w-full p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 flex justify-between items-center transition-all text-left"
+              data-base="OCT"
+            >
+              <span class="text-gray-400 font-bold">OCT</span>
+              <span id="prog-oct" class="font-bold text-sm">0</span>
+            </button>
+            <button
+              class="prog-base-btn w-full p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 flex justify-between items-center transition-all text-left"
+              data-base="BIN"
+            >
+              <span class="text-gray-400 font-bold">BIN</span>
+              <span id="prog-bin" class="font-bold text-sm tracking-wider">0000 0000</span>
+            </button>
+          </div>
+
+          <!-- Bit Width Selector -->
+          <div class="flex justify-between items-center text-xs">
+            <span class="text-gray-400 font-semibold">WORD SIZE:</span>
+            <select
+              id="prog-bits"
+              class="bg-white/10 text-xs px-2.5 py-1 rounded-lg border border-white/10 text-inherit focus:outline-none"
+            >
+              <option value="64" class="bg-gray-900 text-white">64-bit (QWORD)</option>
+              <option value="32" selected class="bg-gray-900 text-white">32-bit (DWORD)</option>
+              <option value="16" class="bg-gray-900 text-white">16-bit (WORD)</option>
+              <option value="8" class="bg-gray-900 text-white">8-bit (BYTE)</option>
+            </select>
+          </div>
+
+          <!-- Bitwise Keypad -->
+          <div class="grid grid-cols-5 gap-2 text-sm font-semibold">
+            <button class="calc-btn calc-btn-fn prog-key min-h-[3rem]" data-val="NOT">NOT</button>
+            <button class="calc-btn calc-btn-fn prog-key min-h-[3rem]" data-val="LSH">&lt;&lt;</button>
+            <button class="calc-btn calc-btn-fn prog-key min-h-[3rem]" data-val="RSH">&gt;&gt;</button>
+            <button class="calc-btn calc-btn-clear prog-key col-span-2 min-h-[3rem]" data-val="CLR">CLR</button>
+
+            <button class="calc-btn calc-btn-fn prog-key min-h-[3rem]" data-val="A">A</button>
+            <button class="calc-btn calc-btn-fn prog-key min-h-[3rem]" data-val="B">B</button>
+            <button class="calc-btn calc-btn-num prog-key min-h-[3rem]" data-val="7">7</button>
+            <button class="calc-btn calc-btn-num prog-key min-h-[3rem]" data-val="8">8</button>
+            <button class="calc-btn calc-btn-num prog-key min-h-[3rem]" data-val="9">9</button>
+
+            <button class="calc-btn calc-btn-fn prog-key min-h-[3rem]" data-val="C">C</button>
+            <button class="calc-btn calc-btn-fn prog-key min-h-[3rem]" data-val="D">D</button>
+            <button class="calc-btn calc-btn-num prog-key min-h-[3rem]" data-val="4">4</button>
+            <button class="calc-btn calc-btn-num prog-key min-h-[3rem]" data-val="5">5</button>
+            <button class="calc-btn calc-btn-num prog-key min-h-[3rem]" data-val="6">6</button>
+
+            <button class="calc-btn calc-btn-fn prog-key min-h-[3rem]" data-val="E">E</button>
+            <button class="calc-btn calc-btn-fn prog-key min-h-[3rem]" data-val="F">F</button>
+            <button class="calc-btn calc-btn-num prog-key min-h-[3rem]" data-val="1">1</button>
+            <button class="calc-btn calc-btn-num prog-key min-h-[3rem]" data-val="2">2</button>
+            <button class="calc-btn calc-btn-num prog-key min-h-[3rem]" data-val="3">3</button>
+
+            <button class="calc-btn calc-btn-num prog-key col-span-3 min-h-[3rem]" data-val="0">0</button>
+            <button class="calc-btn calc-btn-num prog-key min-h-[3rem]" data-val="1">1</button>
+            <button class="calc-btn calc-btn-eq col-span-1 min-h-[3rem]" data-val="=">=</button>
+          </div>
+        </div>
+
+        <!-- Footer Info -->
+        <footer class="mt-6 pt-4 border-t border-white/5 flex flex-wrap justify-between items-center text-xs text-gray-400 gap-2">
+          <div class="flex items-center gap-1.5">
+            <span>Powered by</span>
+            <span class="font-bold text-amber-400">ApexCalc Pro</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="hover:text-amber-400 cursor-pointer" onclick="document.getElementById('shortcuts-btn').click()">
+              <i class="fa-solid fa-keyboard mr-1"></i>Shortcuts
+            </span>
+            <span>•</span>
+            <span class="hover:text-amber-400 cursor-pointer" onclick="document.getElementById('history-btn').click()">
+              <i class="fa-solid fa-clock-rotate-left mr-1"></i>History
+            </span>
+          </div>
+        </footer>
+      </section>
+    </main>
+
+    <!-- History Slide-over Drawer -->
+    <div
+      id="history-overlay"
+      class="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 hidden transition-opacity"
+    ></div>
+    <aside
+      id="history-drawer"
+      class="fixed top-0 right-0 w-full sm:w-[26rem] h-full bg-slate-900 text-white shadow-2xl transform translate-x-full transition-transform duration-300 z-50 p-6 flex flex-col border-l border-white/10"
+      aria-hidden="true"
+      aria-label="Calculation history panel"
+    >
+      <!-- History Drawer Header -->
+      <div class="flex justify-between items-center pb-4 border-b border-white/10">
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-clock-rotate-left text-amber-400 text-lg"></i>
+          <h2 class="text-lg font-bold">Calculation History</h2>
+        </div>
+        <button
+          id="close-history-btn"
+          aria-label="Close history"
+          class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-all"
+        >
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Search & Action Bar -->
+      <div class="py-3 space-y-2 border-b border-white/10">
+        <div class="relative">
+          <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
+          <input
+            id="history-search"
+            type="text"
+            placeholder="Search calculations..."
+            class="w-full bg-white/5 pl-8 pr-3 py-2 rounded-xl text-xs border border-white/10 focus:outline-none focus:border-amber-400 text-white"
+          />
+        </div>
+        <div class="flex gap-2">
+          <button
+            id="clear-history-btn"
+            class="flex-1 py-1.5 px-3 rounded-lg bg-red-500/20 hover:bg-red-500/30 text-red-400 border border-red-500/30 text-xs font-semibold transition-all flex items-center justify-center gap-1.5"
+          >
+            <i class="fa-solid fa-trash-can text-[10px]"></i>Clear
+          </button>
+          <button
+            id="export-history-btn"
+            class="flex-1 py-1.5 px-3 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 border border-amber-500/30 text-xs font-semibold transition-all flex items-center justify-center gap-1.5"
+          >
+            <i class="fa-solid fa-download text-[10px]"></i>Export .txt
+          </button>
+        </div>
+      </div>
+
+      <!-- History Items Scroll Area -->
+      <div id="history-list" class="flex-1 overflow-y-auto py-3 space-y-2.5"></div>
+    </aside>
+
+    <!-- Keyboard Shortcuts Modal -->
+    <div
+      id="shortcuts-modal"
+      class="fixed inset-0 bg-black/70 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden"
+    >
+      <div
+        class="bg-slate-900 border border-white/10 rounded-3xl p-6 max-w-lg w-full shadow-2xl relative max-h-[90vh] overflow-y-auto"
+      >
+        <div class="flex justify-between items-center mb-5 pb-3 border-b border-white/10">
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-keyboard text-amber-400 text-xl"></i>
+            <h3 class="text-lg font-bold text-white">Keyboard Shortcuts</h3>
+          </div>
+          <button
+            id="close-shortcuts-btn"
+            class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white"
+          >
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <div class="space-y-4 text-xs">
+          <!-- Modes -->
+          <div>
+            <span class="font-bold text-amber-400 uppercase tracking-wider block mb-2">Switch Modes</span>
+            <div class="grid grid-cols-2 gap-2">
+              <div class="flex justify-between p-2 rounded-lg bg-white/5">
+                <span class="text-gray-400">Standard</span>
+                <kbd class="px-2 py-0.5 rounded bg-black/40 font-mono text-white">Alt + 1</kbd>
+              </div>
+              <div class="flex justify-between p-2 rounded-lg bg-white/5">
+                <span class="text-gray-400">Scientific</span>
+                <kbd class="px-2 py-0.5 rounded bg-black/40 font-mono text-white">Alt + 2</kbd>
+              </div>
+              <div class="flex justify-between p-2 rounded-lg bg-white/5">
+                <span class="text-gray-400">Converter</span>
+                <kbd class="px-2 py-0.5 rounded bg-black/40 font-mono text-white">Alt + 3</kbd>
+              </div>
+              <div class="flex justify-between p-2 rounded-lg bg-white/5">
+                <span class="text-gray-400">Programmer</span>
+                <kbd class="px-2 py-0.5 rounded bg-black/40 font-mono text-white">Alt + 4</kbd>
+              </div>
+            </div>
+          </div>
+
+          <!-- Basic Ops -->
+          <div>
+            <span class="font-bold text-amber-400 uppercase tracking-wider block mb-2">Calculations</span>
+            <div class="grid grid-cols-2 gap-2">
+              <div class="flex justify-between p-2 rounded-lg bg-white/5">
+                <span class="text-gray-400">Calculate</span>
+                <kbd class="px-2 py-0.5 rounded bg-black/40 font-mono text-white">Enter / =</kbd>
+              </div>
+              <div class="flex justify-between p-2 rounded-lg bg-white/5">
+                <span class="text-gray-400">Clear All</span>
+                <kbd class="px-2 py-0.5 rounded bg-black/40 font-mono text-white">Esc / C</kbd>
+              </div>
+              <div class="flex justify-between p-2 rounded-lg bg-white/5">
+                <span class="text-gray-400">Delete Char</span>
+                <kbd class="px-2 py-0.5 rounded bg-black/40 font-mono text-white">Backspace</kbd>
+              </div>
+              <div class="flex justify-between p-2 rounded-lg bg-white/5">
+                <span class="text-gray-400">Copy Result</span>
+                <kbd class="px-2 py-0.5 rounded bg-black/40 font-mono text-white">Ctrl + C</kbd>
+              </div>
+            </div>
+          </div>
+
+          <!-- Scientific Keys -->
+          <div>
+            <span class="font-bold text-amber-400 uppercase tracking-wider block mb-2">Scientific Keys</span>
+            <div class="grid grid-cols-2 gap-2">
+              <div class="flex justify-between p-2 rounded-lg bg-white/5">
+                <span class="text-gray-400">sin / cos / tan</span>
+                <kbd class="px-2 py-0.5 rounded bg-black/40 font-mono text-white">S / O / T</kbd>
+              </div>
+              <div class="flex justify-between p-2 rounded-lg bg-white/5">
+                <span class="text-gray-400">Constants (π, e)</span>
+                <kbd class="px-2 py-0.5 rounded bg-black/40 font-mono text-white">P / E</kbd>
+              </div>
+              <div class="flex justify-between p-2 rounded-lg bg-white/5">
+                <span class="text-gray-400">Natural Log (ln)</span>
+                <kbd class="px-2 py-0.5 rounded bg-black/40 font-mono text-white">L</kbd>
+              </div>
+              <div class="flex justify-between p-2 rounded-lg bg-white/5">
+                <span class="text-gray-400">Factorial</span>
+                <kbd class="px-2 py-0.5 rounded bg-black/40 font-mono text-white">!</kbd>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tools -->
+          <div>
+            <span class="font-bold text-amber-400 uppercase tracking-wider block mb-2">Navigation & Audio</span>
+            <div class="grid grid-cols-2 gap-2">
+              <div class="flex justify-between p-2 rounded-lg bg-white/5">
+                <span class="text-gray-400">History Panel</span>
+                <kbd class="px-2 py-0.5 rounded bg-black/40 font-mono text-white">H</kbd>
+              </div>
+              <div class="flex justify-between p-2 rounded-lg bg-white/5">
+                <span class="text-gray-400">Mute / Unmute</span>
+                <kbd class="px-2 py-0.5 rounded bg-black/40 font-mono text-white">M</kbd>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Floating Toast Notification -->
+    <div
+      id="toast"
+      class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-slate-900/90 text-white px-5 py-2.5 rounded-2xl shadow-2xl border border-amber-500/30 text-xs font-semibold backdrop-blur-xl flex items-center gap-2 z-50 pointer-events-none"
+    >
+      <i class="fa-solid fa-circle-check text-amber-400"></i>
+      <span id="toast-message">Copied to clipboard</span>
+    </div>
+
+    <!-- Scripts -->
+    <script src="scripts/script.js"></script>
+  </body>
+</html>

@@ -1,0 +1,375 @@
+/* ========================================================
+   ApexCalc Pro - Premium Universal Calculator Stylesheet
+   ======================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  min-height: 100vh;
+  transition: background-color 0.4s ease, color 0.4s ease;
+  overflow-x: hidden;
+  user-select: none;
+}
+
+/* Monospace font for math displays */
+.font-mono-math {
+  font-family: 'Fira Code', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+/* ----------------------------------------------------
+   THEME DEFINITIONS VIA CSS CUSTOM PROPERTIES
+   ---------------------------------------------------- */
+
+/* Theme: Obsidian Dark (Default) */
+[data-theme="obsidian"] {
+  --bg-gradient: radial-gradient(ellipse at 50% -20%, #1e293b, #0f172a 70%, #020617 100%);
+  --card-bg: rgba(30, 41, 59, 0.75);
+  --card-border: rgba(255, 255, 255, 0.08);
+  --card-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --display-bg: rgba(15, 23, 42, 0.85);
+  --display-border: rgba(255, 255, 255, 0.07);
+  --btn-num-bg: rgba(51, 65, 85, 0.7);
+  --btn-num-hover: rgba(71, 85, 105, 0.9);
+  --btn-num-text: #f8fafc;
+  --btn-num-shadow: 0 4px 0 #1e293b, 0 8px 16px rgba(0, 0, 0, 0.3);
+  --btn-fn-bg: rgba(59, 130, 246, 0.15);
+  --btn-fn-hover: rgba(59, 130, 246, 0.3);
+  --btn-fn-text: #60a5fa;
+  --btn-op-bg: linear-gradient(135deg, #f59e0b, #d97706);
+  --btn-op-hover: linear-gradient(135deg, #fbbf24, #f59e0b);
+  --btn-op-text: #ffffff;
+  --btn-op-shadow: 0 4px 0 #b45309, 0 8px 18px rgba(245, 158, 11, 0.35);
+  --btn-eq-bg: linear-gradient(135deg, #10b981, #059669);
+  --btn-eq-hover: linear-gradient(135deg, #34d399, #10b981);
+  --btn-eq-shadow: 0 4px 0 #047857, 0 8px 18px rgba(16, 185, 129, 0.35);
+  --btn-clear-bg: linear-gradient(135deg, #ef4444, #dc2626);
+  --accent-color: #f59e0b;
+  --accent-glow: rgba(245, 158, 11, 0.35);
+}
+
+/* Theme: Aurora Light */
+[data-theme="aurora"] {
+  --bg-gradient: radial-gradient(ellipse at 50% 0%, #f1f5f9, #e2e8f0 70%, #cbd5e1 100%);
+  --card-bg: rgba(255, 255, 255, 0.85);
+  --card-border: rgba(255, 255, 255, 0.8);
+  --card-shadow: 0 25px 50px -12px rgba(100, 116, 139, 0.25);
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --display-bg: rgba(248, 250, 252, 0.95);
+  --display-border: rgba(203, 213, 225, 0.8);
+  --btn-num-bg: #ffffff;
+  --btn-num-hover: #f1f5f9;
+  --btn-num-text: #1e293b;
+  --btn-num-shadow: 0 4px 0 #cbd5e1, 0 8px 16px rgba(148, 163, 184, 0.2);
+  --btn-fn-bg: rgba(238, 242, 255, 0.9);
+  --btn-fn-hover: rgba(224, 231, 255, 1);
+  --btn-fn-text: #4f46e5;
+  --btn-op-bg: linear-gradient(135deg, #f59e0b, #ea580c);
+  --btn-op-hover: linear-gradient(135deg, #fbbf24, #f59e0b);
+  --btn-op-text: #ffffff;
+  --btn-op-shadow: 0 4px 0 #c2410c, 0 8px 18px rgba(234, 88, 12, 0.25);
+  --btn-eq-bg: linear-gradient(135deg, #059669, #047857);
+  --btn-eq-hover: linear-gradient(135deg, #10b981, #059669);
+  --btn-eq-shadow: 0 4px 0 #065f46, 0 8px 18px rgba(5, 150, 105, 0.25);
+  --btn-clear-bg: linear-gradient(135deg, #ef4444, #dc2626);
+  --accent-color: #f59e0b;
+  --accent-glow: rgba(245, 158, 11, 0.2);
+}
+
+/* Theme: Cyberpunk Neon */
+[data-theme="cyberpunk"] {
+  --bg-gradient: radial-gradient(ellipse at 50% 0%, #1a0b2e, #0c0414 70%, #05020a 100%);
+  --card-bg: rgba(26, 11, 46, 0.85);
+  --card-border: rgba(236, 72, 153, 0.3);
+  --card-shadow: 0 25px 60px -10px rgba(236, 72, 153, 0.25);
+  --text-main: #fdf4ff;
+  --text-muted: #d8b4fe;
+  --display-bg: rgba(12, 4, 20, 0.95);
+  --display-border: rgba(236, 72, 153, 0.4);
+  --btn-num-bg: rgba(46, 16, 101, 0.7);
+  --btn-num-hover: rgba(88, 28, 135, 0.9);
+  --btn-num-text: #fdf4ff;
+  --btn-num-shadow: 0 4px 0 #18053a, 0 8px 16px rgba(168, 85, 247, 0.25);
+  --btn-fn-bg: rgba(6, 182, 212, 0.15);
+  --btn-fn-hover: rgba(6, 182, 212, 0.3);
+  --btn-fn-text: #22d3ee;
+  --btn-op-bg: linear-gradient(135deg, #ec4899, #d946ef);
+  --btn-op-hover: linear-gradient(135deg, #f472b6, #e879f9);
+  --btn-op-text: #ffffff;
+  --btn-op-shadow: 0 4px 0 #a21caf, 0 8px 20px rgba(236, 72, 153, 0.4);
+  --btn-eq-bg: linear-gradient(135deg, #06b6d4, #0891b2);
+  --btn-eq-hover: linear-gradient(135deg, #22d3ee, #06b6d4);
+  --btn-eq-shadow: 0 4px 0 #0e7490, 0 8px 20px rgba(6, 182, 212, 0.4);
+  --btn-clear-bg: linear-gradient(135deg, #f43f5e, #e11d48);
+  --accent-color: #ec4899;
+  --accent-glow: rgba(236, 72, 153, 0.45);
+}
+
+/* Theme: Emerald Zen */
+[data-theme="emerald"] {
+  --bg-gradient: radial-gradient(ellipse at 50% 0%, #062e24, #031c16 70%, #010d0a 100%);
+  --card-bg: rgba(6, 46, 36, 0.8);
+  --card-border: rgba(52, 211, 153, 0.2);
+  --card-shadow: 0 25px 60px -10px rgba(16, 185, 129, 0.2);
+  --text-main: #ecfdf5;
+  --text-muted: #6ee7b7;
+  --display-bg: rgba(2, 23, 18, 0.9);
+  --display-border: rgba(52, 211, 153, 0.25);
+  --btn-num-bg: rgba(6, 78, 59, 0.6);
+  --btn-num-hover: rgba(6, 95, 70, 0.85);
+  --btn-num-text: #ecfdf5;
+  --btn-num-shadow: 0 4px 0 #022c22, 0 8px 16px rgba(5, 150, 105, 0.2);
+  --btn-fn-bg: rgba(45, 212, 191, 0.15);
+  --btn-fn-hover: rgba(45, 212, 191, 0.3);
+  --btn-fn-text: #2dd4bf;
+  --btn-op-bg: linear-gradient(135deg, #10b981, #059669);
+  --btn-op-hover: linear-gradient(135deg, #34d399, #10b981);
+  --btn-op-text: #ffffff;
+  --btn-op-shadow: 0 4px 0 #047857, 0 8px 18px rgba(16, 185, 129, 0.3);
+  --btn-eq-bg: linear-gradient(135deg, #f59e0b, #d97706);
+  --btn-eq-hover: linear-gradient(135deg, #fbbf24, #f59e0b);
+  --btn-eq-shadow: 0 4px 0 #b45309, 0 8px 18px rgba(245, 158, 11, 0.3);
+  --btn-clear-bg: linear-gradient(135deg, #ef4444, #dc2626);
+  --accent-color: #34d399;
+  --accent-glow: rgba(52, 211, 153, 0.35);
+}
+
+/* Theme: Oceanic Blue */
+[data-theme="oceanic"] {
+  --bg-gradient: radial-gradient(ellipse at 50% 0%, #0f2744, #08182b 70%, #030c17 100%);
+  --card-bg: rgba(15, 39, 68, 0.85);
+  --card-border: rgba(56, 189, 248, 0.2);
+  --card-shadow: 0 25px 60px -10px rgba(14, 165, 233, 0.25);
+  --text-main: #f0f9ff;
+  --text-muted: #7dd3fc;
+  --display-bg: rgba(8, 24, 43, 0.95);
+  --display-border: rgba(56, 189, 248, 0.3);
+  --btn-num-bg: rgba(30, 58, 95, 0.7);
+  --btn-num-hover: rgba(43, 79, 128, 0.9);
+  --btn-num-text: #f0f9ff;
+  --btn-num-shadow: 0 4px 0 #0c1e33, 0 8px 16px rgba(14, 165, 233, 0.2);
+  --btn-fn-bg: rgba(56, 189, 248, 0.15);
+  --btn-fn-hover: rgba(56, 189, 248, 0.3);
+  --btn-fn-text: #38bdf8;
+  --btn-op-bg: linear-gradient(135deg, #0284c7, #0369a1);
+  --btn-op-hover: linear-gradient(135deg, #38bdf8, #0284c7);
+  --btn-op-text: #ffffff;
+  --btn-op-shadow: 0 4px 0 #075985, 0 8px 18px rgba(2, 132, 199, 0.35);
+  --btn-eq-bg: linear-gradient(135deg, #06b6d4, #0891b2);
+  --btn-eq-hover: linear-gradient(135deg, #22d3ee, #06b6d4);
+  --btn-eq-shadow: 0 4px 0 #0e7490, 0 8px 18px rgba(6, 182, 212, 0.35);
+  --btn-clear-bg: linear-gradient(135deg, #ef4444, #dc2626);
+  --accent-color: #38bdf8;
+  --accent-glow: rgba(56, 189, 248, 0.35);
+}
+
+/* Background Application */
+body {
+  background: var(--bg-gradient);
+  color: var(--text-main);
+}
+
+/* Glassmorphism Card Container */
+.calculator-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  box-shadow: var(--card-shadow);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+/* Calculator Screen Area */
+.display-screen {
+  background: var(--display-bg);
+  border: 1px solid var(--display-border);
+}
+
+/* Dynamic Button Styling */
+.calc-btn {
+  position: relative;
+  border: none;
+  border-radius: 1rem;
+  font-family: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+/* Number & Decimal Buttons */
+.calc-btn-num {
+  background: var(--btn-num-bg);
+  color: var(--btn-num-text);
+  box-shadow: var(--btn-num-shadow);
+}
+.calc-btn-num:hover {
+  background: var(--btn-num-hover);
+  transform: translateY(-2px);
+}
+
+/* Function & Scientific Buttons */
+.calc-btn-fn {
+  background: var(--btn-fn-bg);
+  color: var(--btn-fn-text);
+  box-shadow: 0 3px 0 rgba(0,0,0,0.2), 0 4px 10px rgba(0,0,0,0.1);
+}
+.calc-btn-fn:hover {
+  background: var(--btn-fn-hover);
+  transform: translateY(-2px);
+}
+
+/* Operator Buttons */
+.calc-btn-op {
+  background: var(--btn-op-bg);
+  color: var(--btn-op-text);
+  box-shadow: var(--btn-op-shadow);
+  font-size: 1.35rem;
+}
+.calc-btn-op:hover {
+  background: var(--btn-op-hover);
+  transform: translateY(-2px);
+}
+
+/* Equals Button */
+.calc-btn-eq {
+  background: var(--btn-eq-bg);
+  color: #ffffff;
+  box-shadow: var(--btn-eq-shadow);
+  font-size: 1.5rem;
+  font-weight: 800;
+}
+.calc-btn-eq:hover {
+  background: var(--btn-eq-hover);
+  transform: translateY(-2px);
+}
+
+/* Clear Button */
+.calc-btn-clear {
+  background: var(--btn-clear-bg);
+  color: #ffffff;
+  box-shadow: 0 4px 0 #991b1b, 0 8px 18px rgba(239, 68, 68, 0.35);
+}
+.calc-btn-clear:hover {
+  filter: brightness(1.1);
+  transform: translateY(-2px);
+}
+
+/* Memory Buttons */
+.calc-btn-mem {
+  font-size: 0.85rem;
+  font-weight: 700;
+  border-radius: 0.6rem;
+  padding: 0.4rem 0.6rem;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-muted);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 0.2s ease;
+}
+.calc-btn-mem:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--text-main);
+}
+.calc-btn-mem.active {
+  color: var(--accent-color);
+  border-color: var(--accent-color);
+}
+
+/* Active Press Effect */
+.calc-btn:active, .calc-btn.pressed {
+  transform: translateY(2px) scale(0.98);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2), 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Ripple Animation */
+.ripple-effect {
+  position: absolute;
+  border-radius: 50%;
+  transform: scale(0);
+  animation: ripple 0.5s linear;
+  background-color: rgba(255, 255, 255, 0.35);
+  pointer-events: none;
+}
+@keyframes ripple {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+/* Mode Tabs */
+.mode-tab {
+  position: relative;
+  padding: 0.5rem 1.1rem;
+  border-radius: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.mode-tab:hover {
+  color: var(--text-main);
+  background: rgba(255, 255, 255, 0.06);
+}
+.mode-tab.active {
+  color: var(--text-main);
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.3);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.5);
+}
+
+/* Toast Notification */
+#toast {
+  visibility: hidden;
+  opacity: 0;
+  transform: translate(-50%, 20px);
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+#toast.show {
+  visibility: visible;
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+/* Focus outline for keyboard navigation */
+.calc-btn:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 2px;
+}
+
+/* Floating Ambient Orbs */
+.ambient-orb-1 {
+  background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+}
+.ambient-orb-2 {
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.15) 0%, transparent 70%);
+}
